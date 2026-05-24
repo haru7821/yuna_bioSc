@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>신경계 퀴즈</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap');
+:root{--bg:#0b0f1e;--surface:#131929;--surface2:#1b2438;--border:#1e3558;--accent:#00d4ff;--accent2:#7c3aed;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--orange:#f97316;--text:#e2e8f0;--text-dim:#8899aa;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;z-index:0;}
+.container{max-width:640px;margin:0 auto;padding:28px 16px 60px;position:relative;z-index:1;}
+header{text-align:center;margin-bottom:28px;}
+.header-tag{display:inline-block;font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);padding:5px 14px;border-radius:2px;margin-bottom:14px;}
+h1{font-size:clamp(24px,6vw,36px);font-weight:900;line-height:1.1;margin-bottom:6px;}
+h1 span{color:var(--accent);}
+.subtitle{color:var(--text-dim);font-size:13px;}
+.progress-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;}
+.progress-info{min-width:60px;}
+.progress-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:2px;display:block;margin-bottom:2px;}
+.progress-nums{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--accent);}
+.progress-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width 0.5s cubic-bezier(.4,0,.2,1);}
+.score-display{font-family:'Space Mono',monospace;font-size:13px;color:var(--green);min-width:50px;text-align:right;white-space:nowrap;}
+.stage-badge{display:flex;gap:8px;margin-bottom:12px;}
+.badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;padding:4px 10px;border-radius:2px;border:1px solid;}
+.badge-basic{color:var(--green);border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.09);}
+.badge-mid{color:var(--yellow);border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.09);}
+.badge-hard{color:var(--orange);border-color:rgba(249,115,22,.35);background:rgba(249,115,22,.09);}
+.badge-expert{color:var(--red);border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.09);}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 20px;margin-bottom:12px;position:relative;overflow:hidden;transition:border-color 0.3s;}
+.quiz-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent);border-radius:3px 0 0 3px;opacity:.35;transition:opacity 0.3s;}
+.quiz-card.correct::before{background:var(--green);opacity:1;}
+.quiz-card.wrong::before{background:var(--red);opacity:1;}
+.quiz-card.correct{border-color:rgba(16,185,129,.3);}
+.quiz-card.wrong{border-color:rgba(239,68,68,.3);}
+.q-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;}
+.q-number{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);padding:4px 9px;border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.q-text{font-size:16px;font-weight:500;line-height:1.65;}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.option-btn{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;transition:all 0.18s;width:100%;-webkit-user-select:none;user-select:none;min-height:52px;}
+.option-btn:active:not(:disabled){transform:scale(0.98);}
+.option-btn:disabled{cursor:default;}
+.option-btn.selected-correct{background:rgba(16,185,129,.13);border-color:var(--green);color:var(--green);}
+.option-btn.selected-wrong{background:rgba(239,68,68,.13);border-color:var(--red);color:var(--red);}
+.option-btn.reveal-correct{background:rgba(16,185,129,.07);border-color:rgba(16,185,129,.4);color:var(--green);}
+.opt-label{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--accent);min-width:18px;flex-shrink:0;}
+.option-btn.selected-correct .opt-label,.option-btn.reveal-correct .opt-label{color:var(--green);}
+.option-btn.selected-wrong .opt-label{color:var(--red);}
+.btn-row{display:flex;gap:8px;margin-bottom:14px;}
+.hint-btn{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;color:var(--yellow);font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;width:100%;}
+.hint-btn:active:not(:disabled){transform:scale(0.97);}
+.hint-btn:disabled{opacity:.4;cursor:default;}
+.feedback{display:none;border-radius:12px;padding:14px 16px;margin-top:4px;}
+.feedback.show{display:block;animation:slideIn .25s ease;}
+.feedback.correct-fb{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);}
+.feedback.wrong-fb{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);}
+.feedback.hint-fb{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);}
+.fb-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.fb-icon{font-size:16px;}
+.fb-title{font-weight:700;font-size:13px;}
+.correct-fb .fb-title{color:var(--green);}
+.wrong-fb .fb-title{color:var(--red);}
+.hint-fb .fb-title{color:var(--yellow);}
+.fb-answer{font-size:13px;color:var(--text-dim);line-height:1.7;}
+.fb-answer strong{color:var(--text);}
+.next-btn{display:none;width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;color:var(--accent);font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;transition:all 0.2s;}
+.next-btn:active{transform:scale(0.98);}
+.next-btn.show{display:block;}
+#result-screen{display:none;}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px 24px;text-align:center;position:relative;overflow:hidden;}
+.result-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--text-dim);margin-bottom:14px;}
+.result-score{font-size:72px;font-weight:900;line-height:1;margin-bottom:6px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.result-total{font-size:16px;color:var(--text-dim);margin-bottom:24px;}
+.result-grade{display:inline-block;font-size:16px;font-weight:700;padding:10px 24px;border-radius:8px;margin-bottom:28px;}
+.grade-s{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);}
+.grade-a{background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.3);}
+.grade-b{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.3);}
+.grade-c{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.stat-box{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 8px;}
+.stat-num{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;margin-bottom:4px;}
+.stat-num.green{color:var(--green);}
+.stat-num.red{color:var(--red);}
+.stat-num.yellow{color:var(--yellow);}
+.stat-label{font-size:11px;color:var(--text-dim);}
+.restart-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;padding:16px 40px;color:white;font-family:'Noto Sans KR',sans-serif;font-size:16px;font-weight:700;cursor:pointer;width:100%;}
+.restart-btn:active{transform:scale(0.98);}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="header-tag">생명과학 I</div>
+  <h1>신경계 <span>퀴즈</span></h1>
+  <p class="subtitle">30문항 · 기초 → 심화 단계별 출제 · 💡 답보기 제공</p>
+</header>
+<div class="progress-section">
+  <div class="progress-info">
+    <span class="progress-label">PROGRESS</span>
+    <span class="progress-nums" id="prog-text">1 / 30</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="prog-bar" style="width:3.33%"></div>
+  </div>
+  <div class="score-display" id="score-display">0점</div>
+</div>
+<div id="quiz-area"></div>
+<div id="result-screen">
+  <div class="result-card">
+    <div class="result-title">QUIZ COMPLETE</div>
+    <div class="result-score" id="final-score">0</div>
+    <div class="result-total">/ 30 문항 정답</div>
+    <div class="result-grade" id="final-grade"></div>
+    <div class="result-stats">
+      <div class="stat-box"><div class="stat-num green" id="stat-correct">0</div><div class="stat-label">정답</div></div>
+      <div class="stat-box"><div class="stat-num red" id="stat-wrong">0</div><div class="stat-label">오답</div></div>
+      <div class="stat-box"><div class="stat-num yellow" id="stat-pct">0%</div><div class="stat-label">정답률</div></div>
+    </div>
+    <button class="restart-btn" onclick="restart()">↺ 다시 풀기</button>
+  </div>
+</div>
+</div>
+<script>
+var Q=[
+{stage:"기초",q:"뇌줄기를 구성하는 부위가 아닌 것은?",options:["중간뇌","숨골","소뇌","다리뇌"],answer:2,explanation:"뇌줄기 = 중간뇌 + 숨골 + 다리뇌\n소뇌는 뇌줄기에 속하지 않습니다."},
+{stage:"기초",q:"심장박동과 호흡운동의 조절 중추는?",options:["대뇌","소뇌","중간뇌","숨골"],answer:3,explanation:"숨골 = 심장박동 + 호흡운동 조절 중추\n중간뇌 = 동공반사 중추"},
+{stage:"기초",q:"동공반사의 중추는?",options:["대뇌","숨골","중간뇌","소뇌"],answer:2,explanation:"중간뇌는 동공반사의 중추입니다. 뇌줄기에 포함됩니다."},
+{stage:"기초",q:"무릎반사의 중추는?",options:["대뇌","소뇌","척수","숨골"],answer:2,explanation:"무릎반사는 척수반사입니다.\n경로: 피부→감각신경→척수→운동신경→근육"},
+{stage:"기초",q:"척수에서 감각신경 다발이 있는 곳은?",options:["전근","후근","백색질","동원체"],answer:1,explanation:"후근 = 감각신경 다발\n전근 = 운동신경 다발"},
+{stage:"기초",q:"척수의 속질(회색질)에 주로 모여 있는 것은?",options:["축삭돌기","신경세포체","말이집","시냅스소포"],answer:1,explanation:"척수 속질(회색질) = 신경세포체\n척수 겉질(백색질) = 축삭돌기"},
+{stage:"기초",q:"사이뇌의 시상하부가 주로 담당하는 기능은?",options:["동공반사","수의운동","항상성 유지","심장박동 조절"],answer:2,explanation:"시상하부 = 자율신경 + 내분비계 조절 중추\n항상성 유지에 핵심적 역할"},
+{stage:"기초",q:"대뇌의 겉질에 대한 설명으로 옳은 것은?",options:["축삭돌기가 모여 백색질을 이룬다","신경세포체가 모여 회색질을 이룬다","심장박동 중추이다","뇌줄기를 구성한다"],answer:1,explanation:"대뇌 겉질 = 신경세포체가 있는 회색질\n대뇌 속질 = 축삭돌기가 있는 백색질"},
+{stage:"중요",q:"교감신경과 부교감신경 중 신경절이전 뉴런이 더 긴 것은?",options:["교감신경","부교감신경","둘 다 같다","상황에 따라 다르다"],answer:1,explanation:"교감신경: 신경절이전 짧음 / 신경절이후 김\n부교감신경: 신경절이전 김 / 신경절이후 짧음"},
+{stage:"중요",q:"교감신경 신경절이후 뉴런 말단에서 분비되는 신경전달물질은?",options:["아세틸콜린","노르에피네프린","도파민","세로토닌"],answer:1,explanation:"교감신경 신경절이후 말단 → 노르에피네프린\n나머지 자율신경 말단 → 아세틸콜린"},
+{stage:"중요",q:"부교감신경이 흥분했을 때 나타나는 변화로 옳은 것은?",options:["심장박동 촉진","동공 확대","소화액 분비 촉진","숨관가지 확장"],answer:2,explanation:"부교감신경 흥분:\n심장박동↓, 동공 축소, 소화액 분비↑, 숨관가지 수축"},
+{stage:"중요",q:"교감신경이 흥분했을 때 일어나는 변화가 아닌 것은?",options:["심장박동 촉진","동공 확대","소화액 분비 억제","방광 수축"],answer:3,explanation:"교감신경 흥분 시 방광은 확장(이완)합니다.\n방광 수축 = 부교감신경 흥분 시 나타남"},
+{stage:"중요",q:"심장에 연결된 부교감신경의 신경절이전 뉴런 세포체 위치는?",options:["대뇌","척수","숨골","중간뇌"],answer:2,explanation:"심장 부교감신경 → 신경절이전 뉴런 세포체: 숨골\n방광 자율신경 → 신경절이전 뉴런 세포체: 척수"},
+{stage:"중요",q:"체성신경계의 운동신경 말단에서 분비되는 물질은?",options:["노르에피네프린","아세틸콜린","인슐린","글루카곤"],answer:1,explanation:"체성신경계 운동신경 말단 → 아세틸콜린\n골격근에 작용합니다."},
+{stage:"중요",q:"자율신경계에 대한 설명으로 옳은 것은?",options:["대뇌의 직접적인 조절을 받는다","골격근의 운동을 조절한다","교감신경과 부교감신경으로 구성된다","뉴런 1개로 구성된다"],answer:2,explanation:"자율신경계 = 교감신경 + 부교감신경\n내장기관 조절, 뉴런 2개가 신경절에서 시냅스를 이룸"},
+{stage:"중요",q:"말초신경계 구성으로 옳은 것은?",options:["뇌 + 척수","감각신경(구심성) + 운동신경(원심성)","교감신경 + 부교감신경만","뇌신경 12쌍만"],answer:1,explanation:"말초신경계: 구심성(감각신경) + 원심성(체성신경계+자율신경계)\n뇌+척수 = 중추신경계"},
+{stage:"심화",q:"다음 중 옳지 않은 것은?",options:["교감신경 신경절이전 뉴런 세포체는 척수에 있다","부교감신경 신경절이전·이후 모두 아세틸콜린 분비","체성신경계 운동신경은 내장근을 조절한다","자율신경은 뉴런 2개가 신경절에서 시냅스"],answer:2,explanation:"체성신경계 운동신경은 골격근을 조절합니다.\n내장근은 자율신경계가 조절합니다."},
+{stage:"심화",q:"홍채(눈)에 연결된 교감신경의 신경절이전 뉴런 세포체가 있는 곳은?",options:["척수","숨골","중간뇌","대뇌"],answer:0,explanation:"눈 교감신경 신경절이전 세포체 → 척수\n눈 부교감신경 신경절이전 세포체 → 중간뇌"},
+{stage:"심화",q:"의식적 반응 경로를 순서대로 올바르게 나열한 것은?",options:["감각기→척수→대뇌→척수→반응기","감각기→감각신경→대뇌→운동신경→반응기","감각기→대뇌→척수→운동신경→반응기","감각기→감각신경→척수→운동신경→반응기"],answer:1,explanation:"의식적 반응: 감각기→감각신경→대뇌→운동신경→반응기\n척수반사: 감각기→감각신경→척수→운동신경→반응기"},
+{stage:"심화",q:"방광에 연결된 교감·부교감신경의 신경절이전 뉴런 세포체는?",options:["교감:숨골 / 부교감:척수","교감:척수 / 부교감:척수","교감:척수 / 부교감:숨골","교감:숨골 / 부교감:숨골"],answer:1,explanation:"방광 교감신경과 부교감신경 모두\n신경절이전 뉴런 세포체가 척수에 있습니다."},
+{stage:"심화",q:"뇌 손상으로 자발적 호흡은 불가능하지만 의식은 있을 때, 손상된 부위는?",options:["대뇌","소뇌","숨골","중간뇌"],answer:2,explanation:"호흡운동 중추 = 숨골 → 손상\n의식이 있다 = 대뇌 기능은 정상"},
+{stage:"심화",q:"척수반사가 의식적 반응보다 반응 속도가 빠른 이유는?",options:["척수가 대뇌보다 크기 때문","척수반사는 대뇌를 거치지 않기 때문","척수에 뉴런이 더 많기 때문","척수에서 신경전달물질이 더 빠르게 분비되기 때문"],answer:1,explanation:"척수반사는 대뇌를 거치지 않아 반응 경로가 짧고 반응이 빠릅니다."},
+{stage:"심화",q:"교감신경 흥분 시 숨관가지에 나타나는 변화는?",options:["수축","확장(이완)","변화 없음","먼저 수축 후 이완"],answer:1,explanation:"교감신경 흥분 → 숨관가지 확장(이완)\n부교감신경 흥분 → 숨관가지 수축"},
+{stage:"심화",q:"다음 중 뇌줄기가 손상되지 않고 생명 유지가 불가능한 이유는?",options:["대뇌 없이는 생각이 불가능하기 때문","뇌줄기에 심장박동·호흡운동 등 생명 유지 중추가 있기 때문","소뇌 없이는 균형을 잡을 수 없기 때문","척수 없이는 반사가 불가능하기 때문"],answer:1,explanation:"뇌줄기(중간뇌+숨골+다리뇌)에는 심장박동, 호흡운동 등 생명 유지에 필수적인 중추가 있습니다."},
+{stage:"최고",q:"신경전달물질에 대한 설명으로 옳지 않은 것은?",options:["교감신경 신경절이전 뉴런 말단 → 아세틸콜린","부교감신경 신경절이후 뉴런 말단 → 아세틸콜린","교감신경 신경절이후 뉴런 말단 → 아세틸콜린","체성신경계 운동신경 말단 → 아세틸콜린"],answer:2,explanation:"교감신경 신경절이후 뉴런 말단 → 노르에피네프린!\n이것이 교감/부교감 구분의 핵심입니다."},
+{stage:"최고",q:"교감·부교감 신경절이전 뉴런 세포체가 모두 척수에 있는 기관은?",options:["심장","눈(홍채)","위","방광"],answer:3,explanation:"방광: 교감(척수)+부교감(척수) 모두 척수\n심장: 교감(척수)+부교감(숨골)\n눈: 교감(척수)+부교감(중간뇌)"},
+{stage:"최고",q:"부교감신경에 대한 설명으로 옳은 것은?",options:["신경절이후 뉴런이 신경절이전 뉴런보다 길다","신경절이전·이후 뉴런 말단 모두 아세틸콜린 분비","심장에 연결된 신경절이전 뉴런 세포체는 척수에 있다","흥분 시 동공이 확대된다"],answer:1,explanation:"부교감신경: 신경절이전 김, 신경절이후 짧음\n신경절이전·이후 모두 아세틸콜린 분비 ✓\n심장 부교감 신경절이전 → 숨골"},
+{stage:"최고",q:"뇌 특정 부위 손상으로 동공반사는 없지만 호흡과 심장박동은 정상인 경우, 손상 부위는?",options:["중간뇌","숨골","대뇌","소뇌"],answer:0,explanation:"동공반사 중추 = 중간뇌 → 손상\n호흡·심장박동 중추 = 숨골 → 정상"},
+{stage:"최고",q:"자율신경계와 체성신경계의 차이로 옳은 것은?",options:["자율신경계는 뉴런 1개, 체성신경계는 뉴런 2개","자율신경계는 내장기관 조절, 체성신경계는 골격근 조절","자율신경계는 말초신경계에 속하지 않는다","체성신경계는 교감·부교감으로 나뉜다"],answer:1,explanation:"자율신경계: 내장기관 조절 (뉴런 2개, 신경절 있음)\n체성신경계: 골격근 조절 (뉴런 1개, 신경절 없음)"},
+{stage:"최고",q:"위기 상황(공포)에서 일어나는 자율신경계 반응으로 옳은 것은?",options:["부교감신경 흥분→심장박동↓, 동공 축소","교감신경 흥분→심장박동↑, 동공 확대","교감신경 흥분→심장박동↓, 동공 확대","부교감신경 흥분→심장박동↑, 소화액↓"],answer:1,explanation:"위기/긴장 상황 → 교감신경 흥분\n심장박동↑, 동공 확대, 숨관가지 확장\n이를 fight or flight 반응이라 합니다."}
+];
+
+var current=0,score=0,answered=false;
+function render(){
+  var area=document.getElementById('quiz-area');
+  if(current>=Q.length){showResult();return;}
+  var q=Q[current];
+  answered=false;
+  var sc={기초:'badge-basic',중요:'badge-mid',심화:'badge-hard',최고:'badge-expert'}[q.stage];
+  var opts=q.options.map(function(o,i){
+    return '<button class="option-btn" onclick="pick('+i+')" id="opt-'+i+'"><span class="opt-label">'+['①','②','③','④'][i]+'</span><span>'+o+'</span></button>';
+  }).join('');
+  area.innerHTML='<div class="stage-badge"><span class="badge '+sc+'">'+q.stage+'</span></div>'+
+    '<div class="quiz-card" id="q-card">'+
+    '<div class="q-header"><span class="q-number">Q'+(current+1)+'</span><span class="q-text">'+q.q.replace(/\n/g,'<br>')+'</span></div>'+
+    '<div class="options">'+opts+'</div>'+
+    '<div class="btn-row"><button class="hint-btn" id="hint-btn" onclick="showHint()">💡 답보기</button></div>'+
+    '<div class="feedback" id="feedback"></div>'+
+    '</div>'+
+    '<button class="next-btn" id="next-btn" onclick="next()">'+(current<Q.length-1?'다음 문제 →':'결과 보기 →')+'</button>';
+  updateProg();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function pick(idx){
+  if(answered)return;
+  answered=true;
+  var q=Q[current];
+  var fb=document.getElementById('feedback');
+  var card=document.getElementById('q-card');
+  document.getElementById('hint-btn').disabled=true;
+  for(var i=0;i<q.options.length;i++){
+    var b=document.getElementById('opt-'+i);
+    b.disabled=true;
+    if(i===q.answer)b.classList.add(i===idx?'selected-correct':'reveal-correct');
+    else if(i===idx)b.classList.add('selected-wrong');
+  }
+  if(idx===q.answer){
+    score++;
+    card.classList.add('correct');
+    fb.innerHTML='<div class="fb-top"><span class="fb-icon">✅</span><span class="fb-title">정답!</span></div><div class="fb-answer">'+(q.explanation||'').replace(/\n/g,'<br>')+'</div>';
+    fb.className='feedback correct-fb show';
+  }else{
+    card.classList.add('wrong');
+    fb.innerHTML='<div class="fb-top"><span class="fb-icon">❌</span><span class="fb-title">오답</span></div><div class="fb-answer"><strong>정답: '+q.options[q.answer]+'</strong><br>'+(q.explanation||'').replace(/\n/g,'<br>')+'</div>';
+    fb.className='feedback wrong-fb show';
+  }
+  document.getElementById('next-btn').classList.add('show');
+  document.getElementById('score-display').textContent=score+'점';
+}
+function showHint(){
+  if(answered)return;
+  answered=true;
+  var q=Q[current];
+  var fb=document.getElementById('feedback');
+  var card=document.getElementById('q-card');
+  document.getElementById('hint-btn').disabled=true;
+  for(var i=0;i<q.options.length;i++){
+    var b=document.getElementById('opt-'+i);
+    b.disabled=true;
+    if(i===q.answer)b.classList.add('reveal-correct');
+  }
+  card.classList.add('wrong');
+  fb.innerHTML='<div class="fb-top"><span class="fb-icon">💡</span><span class="fb-title">정답 공개 (점수 미획득)</span></div><div class="fb-answer"><strong>정답: '+q.options[q.answer]+'</strong><br>'+(q.explanation||'').replace(/\n/g,'<br>')+'</div>';
+  fb.className='feedback hint-fb show';
+  document.getElementById('next-btn').classList.add('show');
+}
+function next(){current++;render();}
+function updateProg(){
+  document.getElementById('prog-text').textContent=(current+1)+' / '+Q.length;
+  document.getElementById('prog-bar').style.width=((current+1)/Q.length*100)+'%';
+}
+function showResult(){
+  document.getElementById('quiz-area').classList.add('hidden');
+  document.getElementById('result-screen').style.display='block';
+  var pct=Math.round(score/Q.length*100);
+  document.getElementById('final-score').textContent=score;
+  document.getElementById('stat-correct').textContent=score;
+  document.getElementById('stat-wrong').textContent=Q.length-score;
+  document.getElementById('stat-pct').textContent=pct+'%';
+  var g=document.getElementById('final-grade');
+  if(pct>=90){g.textContent='🏆 완벽 — S등급';g.className='result-grade grade-s';}
+  else if(pct>=77){g.textContent='👍 우수 — A등급';g.className='result-grade grade-a';}
+  else if(pct>=60){g.textContent='📚 보통 — B등급, 복습!';g.className='result-grade grade-b';}
+  else{g.textContent='⚠️ 미흡 — 처음부터 복습';g.className='result-grade grade-c';}
+}
+function restart(){
+  current=0;score=0;answered=false;
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('quiz-area').classList.remove('hidden');
+  document.getElementById('score-display').textContent='0점';
+  render();
+}
+render();
+</script>
+</body>
+</html>
