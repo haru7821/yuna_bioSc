@@ -4,7 +4,11 @@ const state = {
   
   // Quiz State
   quizStatus: 'setup', // 'setup', 'active', 'result'
-  selectedCategories: ['nervous', 'homeostasis', 'genetics'],
+  selectedCategories: [
+    'mid1_1', 'mid1_2', 'mid1_3', 
+    'sub2_1_1', 'sub2_1_2', 'sub2_1_3', 'sub2_2_1', 'sub2_2_2',
+    'sub3_1_1', 'sub3_1_2', 'sub3_2_1', 'sub3_2_2', 'sub3_2_3'
+  ],
   questions: [],
   currentQuestionIndex: 0,
   userAnswers: [], // Array of { questionId, chosenIndex, isCorrect }
@@ -142,22 +146,85 @@ function renderQuizView() {
           <h3 class="section-title"><i data-lucide="check-square" style="color: var(--neon-cyan)"></i> 학습 영역 선택</h3>
           
           <div class="category-selection-grid">
-            <div class="category-checkbox-card ${state.selectedCategories.includes('nervous') ? 'checked' : ''}" data-category="nervous">
+            <!-- 대단원 1 (중단원) -->
+            <div class="category-checkbox-card ${state.selectedCategories.includes('mid1_1') ? 'checked' : ''}" data-category="mid1_1">
+              <span class="category-icon">🔬</span>
+              <div class="category-name">Ⅰ-❶ 생명과학의 이해</div>
+              <div class="category-desc">생물의 특성, 바이러스, 생명과학의 특성과 구성 단계</div>
+            </div>
+            
+            <div class="category-checkbox-card ${state.selectedCategories.includes('mid1_2') ? 'checked' : ''}" data-category="mid1_2">
+              <span class="category-icon">⚡</span>
+              <div class="category-name">Ⅰ-❷ 생명활동과 에너지</div>
+              <div class="category-desc">물질대사와 ATP, 세포 호흡, 소화·순환·호흡·배설계 통합 작용, 대사성 질환</div>
+            </div>
+            
+            <div class="category-checkbox-card ${state.selectedCategories.includes('mid1_3') ? 'checked' : ''}" data-category="mid1_3">
+              <span class="category-icon">🌱</span>
+              <div class="category-name">Ⅰ-❸ 생태계와 상호작용</div>
+              <div class="category-desc">생태계 구조, 작용과 반작용, 개체군 밀도/생존 곡선, 군집 천이와 상호작용, 에너지 흐름</div>
+            </div>
+
+            <!-- 대단원 2 (소단원) -->
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub2_1_1') ? 'checked' : ''}" data-category="sub2_1_1">
+              <span class="category-icon">🔌</span>
+              <div class="category-name">Ⅱ-❶-01. 흥분 전도와 전달</div>
+              <div class="category-desc">신경 세포막의 분극·탈분극·재분극 막전위 변화, 시냅스 흥분 전달</div>
+            </div>
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub2_1_2') ? 'checked' : ''}" data-category="sub2_1_2">
               <span class="category-icon">🧠</span>
-              <div class="category-name">신경계 & 근수축</div>
-              <div class="category-desc">뇌와 척수, 자율신경, 근수축 구조 및 계산</div>
+              <div class="category-name">Ⅱ-❶-02. 신경계의 구조와 기능</div>
+              <div class="category-desc">대뇌·소뇌·간뇌·연수·중간뇌 중추 신경계와 체성/자율 신경계(교감/부교감)</div>
             </div>
-            
-            <div class="category-checkbox-card ${state.selectedCategories.includes('homeostasis') ? 'checked' : ''}" data-category="homeostasis">
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub2_1_3') ? 'checked' : ''}" data-category="sub2_1_3">
               <span class="category-icon">🌡️</span>
-              <div class="category-name">항상성 유지 & 면역</div>
-              <div class="category-desc">호르몬 피드백, 삼투압, 면역, 혈액형</div>
+              <div class="category-name">Ⅱ-❶-03. 항상성 유지</div>
+              <div class="category-desc">호르몬 분비 피드백 루프, 인체의 체온·혈당량·삼투압 조절 기전</div>
             </div>
-            
-            <div class="category-checkbox-card ${state.selectedCategories.includes('genetics') ? 'checked' : ''}" data-category="genetics">
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub2_2_1') ? 'checked' : ''}" data-category="sub2_2_1">
+              <span class="category-icon">🦠</span>
+              <div class="category-name">Ⅱ-❷-01. 병원체와 방어작용</div>
+              <div class="category-desc">세균·바이러스·프라이온 감염성 질병, 인체 1·2차 비특이적/특이적 면역</div>
+            </div>
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub2_2_2') ? 'checked' : ''}" data-category="sub2_2_2">
+              <span class="category-icon">🛡️</span>
+              <div class="category-name">Ⅱ-❷-02. 항원항체반응과 백신</div>
+              <div class="category-desc">백신의 예방 기전과 기억 세포 형성, ABO 및 Rh식 혈액형 응집 판정</div>
+            </div>
+
+            <!-- 대단원 3 (소단원) -->
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub3_1_1') ? 'checked' : ''}" data-category="sub3_1_1">
               <span class="category-icon">🧬</span>
-              <div class="category-name">유전 & 세포 분열</div>
-              <div class="category-desc">세포 주기, 감수 분열, 가계도, 돌연변이</div>
+              <div class="category-name">Ⅲ-❶-01. 염색체와 유전자</div>
+              <div class="category-desc">염색체 구조, 뉴클레오솜, 대립유전자, 가계도 및 다인자 사람의 유전</div>
+            </div>
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub3_1_2') ? 'checked' : ''}" data-category="sub3_1_2">
+              <span class="category-icon">🥚</span>
+              <div class="category-name">Ⅲ-❶-02. 생식세포 형성과 다양성</div>
+              <div class="category-desc">세포 주기 및 체세포/감수 분열과 유전 다양성 원리, 염색체 비분리 돌연변이</div>
+            </div>
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub3_2_1') ? 'checked' : ''}" data-category="sub3_2_1">
+              <span class="category-icon">🦖</span>
+              <div class="category-name">Ⅲ-❷-01. 생물의 진화</div>
+              <div class="category-desc">다윈의 자연선택설에 의한 생물의 적응과 진화 원리 및 발생/해부학적 증거</div>
+            </div>
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub3_2_2') ? 'checked' : ''}" data-category="sub3_2_2">
+              <span class="category-icon">🗺️</span>
+              <div class="category-name">Ⅲ-❷-02. 생물의 분류체계</div>
+              <div class="category-desc">생물 분류 계급(계문강목과속종) 및 현대 3역 6계 분자 계통 체계</div>
+            </div>
+
+            <div class="category-checkbox-card ${state.selectedCategories.includes('sub3_2_3') ? 'checked' : ''}" data-category="sub3_2_3">
+              <span class="category-icon">🍀</span>
+              <div class="category-name">Ⅲ-❷-03. 식물과 동물의 분류</div>
+              <div class="category-desc">선태·양치·겉씨·속씨식물의 분류 및 자포·편형·연체·환형·절지·척삭동물 분류</div>
             </div>
           </div>
 
@@ -218,6 +285,10 @@ function renderQuizView() {
     const progressPercent = Math.round(((state.currentQuestionIndex) / state.questions.length) * 100);
     const timeFormatted = formatTime(state.elapsedTime);
 
+    // Check if this question was already answered
+    const savedAnswer = state.userAnswers[state.currentQuestionIndex];
+    const isAnswered = savedAnswer !== undefined;
+
     container.innerHTML = `
       <div class="quiz-active-container">
         <div class="quiz-header">
@@ -240,36 +311,95 @@ function renderQuizView() {
           <div class="question-text">${currentQuestion.question}</div>
           
           <ul class="options-list">
-            ${currentQuestion.options.map((opt, idx) => `
-              <li class="option-item">
-                <button class="option-button" data-idx="${idx}">
-                  <span class="option-index">${idx + 1}</span>
-                  <span class="option-content">${opt}</span>
-                </button>
-              </li>
-            `).join('')}
+            ${currentQuestion.options.map((opt, idx) => {
+              let btnClass = 'option-button';
+              let isDisabled = isAnswered ? 'disabled' : '';
+              
+              if (isAnswered) {
+                if (idx === currentQuestion.answer) {
+                  btnClass += ' correct';
+                } else if (idx === savedAnswer.chosenIndex) {
+                  btnClass += ' incorrect';
+                }
+              }
+              
+              return `
+                <li class="option-item">
+                  <button class="${btnClass}" data-idx="${idx}" ${isDisabled}>
+                    <span class="option-index">${idx + 1}</span>
+                    <span class="option-content">${opt}</span>
+                  </button>
+                </li>
+              `;
+            }).join('')}
           </ul>
 
-          <div id="quiz-feedback" class="feedback-panel" style="display: none;">
+          <div id="quiz-feedback" class="feedback-panel" style="${isAnswered ? 'display: block;' : 'display: none;'}">
             <div class="explanation-card">
               <div class="explanation-title">
                 <i data-lucide="info"></i> 해설 및 피드백
               </div>
               <div class="explanation-text">${currentQuestion.explanation}</div>
             </div>
-            <button id="next-question-btn" class="btn btn-primary" style="float: right;">
+          </div>
+
+          <div class="quiz-navigation-row" style="display: flex; justify-content: space-between; margin-top: 1.5rem; gap: 15px; border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
+            <button id="prev-question-btn" class="btn btn-secondary" ${state.currentQuestionIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+              <i data-lucide="arrow-left"></i> 이전 문제
+            </button>
+            <button id="next-question-btn" class="btn btn-primary" style="${isAnswered ? '' : 'display: none;'}">
               ${state.currentQuestionIndex === state.questions.length - 1 ? '결과 확인하기' : '다음 문제'} <i data-lucide="arrow-right"></i>
             </button>
-            <div style="clear: both;"></div>
           </div>
         </div>
       </div>
     `;
 
-    // Add click listeners to option buttons
-    container.querySelectorAll('.option-button').forEach(btn => {
-      btn.addEventListener('click', (e) => handleAnswerSelection(e, currentQuestion));
-    });
+    // Add click listeners to option buttons (only if not answered yet)
+    if (!isAnswered) {
+      container.querySelectorAll('.option-button').forEach(btn => {
+        btn.addEventListener('click', (e) => handleAnswerSelection(e, currentQuestion));
+      });
+    }
+
+    // Add navigation listeners
+    const prevBtn = document.getElementById('prev-question-btn');
+    if (prevBtn) {
+      prevBtn.onclick = () => {
+        if (state.currentQuestionIndex > 0) {
+          state.currentQuestionIndex--;
+          renderQuizView();
+        }
+      };
+    }
+
+    const nextBtn = document.getElementById('next-question-btn');
+    if (nextBtn) {
+      nextBtn.onclick = () => {
+        if (state.currentQuestionIndex === state.questions.length - 1) {
+          // Quiz finished
+          clearInterval(state.timerInterval);
+          state.quizStatus = 'result';
+
+          // Re-calculate wrongQuestionsList at the end to avoid duplication/issues
+          state.wrongQuestionsList = [];
+          state.userAnswers.forEach((ans, idx) => {
+            if (ans && !ans.isCorrect) {
+              state.wrongQuestionsList.push({
+                questionObj: state.questions[idx],
+                chosenIndex: ans.chosenIndex
+              });
+            }
+          });
+          
+          updateGlobalStats();
+          renderQuizView();
+        } else {
+          state.currentQuestionIndex++;
+          renderQuizView();
+        }
+      };
+    }
 
   } else if (state.quizStatus === 'result') {
     // Generate Result Screen
@@ -306,18 +436,39 @@ function renderQuizView() {
                 <div class="breakdown-label"><i data-lucide="clock"></i> 풀이 소요 시간</div>
                 <div class="breakdown-value numbers">${timeFormatted}</div>
               </div>
-              <div class="breakdown-row">
-                <div class="breakdown-label">🧠 신경계 정답률</div>
-                <div class="breakdown-value numbers">${categoryAnalysis.nervous}%</div>
-              </div>
-              <div class="breakdown-row">
-                <div class="breakdown-label">🌡️ 항상성 정답률</div>
-                <div class="breakdown-value numbers">${categoryAnalysis.homeostasis}%</div>
-              </div>
-              <div class="breakdown-row">
-                <div class="breakdown-label">🧬 유전 정답률</div>
-                <div class="breakdown-value numbers">${categoryAnalysis.genetics}%</div>
-              </div>
+              ${(() => {
+                const categoryKeys = [
+                  'mid1_1', 'mid1_2', 'mid1_3',
+                  'sub2_1_1', 'sub2_1_2', 'sub2_1_3', 'sub2_2_1', 'sub2_2_2',
+                  'sub3_1_1', 'sub3_1_2', 'sub3_2_1', 'sub3_2_2', 'sub3_2_3'
+                ];
+                const categoryIcons = {
+                  mid1_1: '🔬',
+                  mid1_2: '⚡',
+                  mid1_3: '🌱',
+                  sub2_1_1: '🔌',
+                  sub2_1_2: '🧠',
+                  sub2_1_3: '🌡️',
+                  sub2_2_1: '🦠',
+                  sub2_2_2: '🛡️',
+                  sub3_1_1: '🧬',
+                  sub3_1_2: '🥚',
+                  sub3_2_1: '🦖',
+                  sub3_2_2: '🗺️',
+                  sub3_2_3: '🍀'
+                };
+                return categoryKeys.map(key => {
+                  const rate = categoryAnalysis.analysis[key];
+                  const count = categoryAnalysis.counts[key];
+                  const displayVal = count > 0 ? `${rate}% (${count}문항)` : '미선택';
+                  return `
+                    <div class="breakdown-row">
+                      <div class="breakdown-label">${categoryIcons[key]} ${getCategoryName(key)}</div>
+                      <div class="breakdown-value numbers" style="color: ${count > 0 ? 'var(--neon-cyan)' : 'var(--text-muted)'}">${displayVal}</div>
+                    </div>
+                  `;
+                }).join('');
+              })()}
             </div>
             
             <div style="display: flex; gap: 10px; margin-top: 2rem;">
@@ -433,40 +584,26 @@ function handleAnswerSelection(e, question) {
     selectedBtn.classList.add('incorrect');
     // Highlight correct answer
     buttons[question.answer].classList.add('correct');
-    
-    // Add to wrong list
-    state.wrongQuestionsList.push({
-      questionObj: question,
-      chosenIndex: chosenIndex
-    });
   }
 
   // Save answer
-  state.userAnswers.push({
+  state.userAnswers[state.currentQuestionIndex] = {
     questionId: question.id,
     chosenIndex: chosenIndex,
     isCorrect: isCorrect
-  });
+  };
 
   // Show feedback
   const feedback = document.getElementById('quiz-feedback');
-  feedback.style.display = 'block';
+  if (feedback) {
+    feedback.style.display = 'block';
+  }
   
-  // Register next button
-  document.getElementById('next-question-btn').onclick = () => {
-    if (state.currentQuestionIndex === state.questions.length - 1) {
-      // Quiz finished
-      clearInterval(state.timerInterval);
-      state.quizStatus = 'result';
-      
-      // Update global stats
-      updateGlobalStats();
-      renderQuizView();
-    } else {
-      state.currentQuestionIndex++;
-      renderQuizView();
-    }
-  };
+  // Show next button
+  const nextBtn = document.getElementById('next-question-btn');
+  if (nextBtn) {
+    nextBtn.style.display = 'inline-flex';
+  }
 }
 
 // Helpers
@@ -478,15 +615,25 @@ function formatTime(sec) {
 
 function getCategoryName(cat) {
   switch (cat) {
-    case 'nervous': return '신경계';
-    case 'homeostasis': return '항상성';
-    case 'genetics': return '유전';
+    case 'mid1_1': return 'Ⅰ-❶ 생명과학의 이해';
+    case 'mid1_2': return 'Ⅰ-❷ 생명활동과 에너지';
+    case 'mid1_3': return 'Ⅰ-❸ 생태계와 상호작용';
+    case 'sub2_1_1': return 'Ⅱ-❶-01. 흥분 전도와 전달';
+    case 'sub2_1_2': return 'Ⅱ-❶-02. 신경계의 구조와 기능';
+    case 'sub2_1_3': return 'Ⅱ-❶-03. 항상성 유지';
+    case 'sub2_2_1': return 'Ⅱ-❷-01. 병원체와 방어작용';
+    case 'sub2_2_2': return 'Ⅱ-❷-02. 항원항체반응과 백신';
+    case 'sub3_1_1': return 'Ⅲ-❶-01. 염색체와 유전자';
+    case 'sub3_1_2': return 'Ⅲ-❶-02. 생식세포 형성과 다양성';
+    case 'sub3_2_1': return 'Ⅲ-❷-01. 생물의 진화';
+    case 'sub3_2_2': return 'Ⅲ-❷-02. 생물의 분류체계';
+    case 'sub3_2_3': return 'Ⅲ-❷-03. 식물과 동물의 분류';
     default: return '공통';
   }
 }
 
 function calculateScore() {
-  const correctCount = state.userAnswers.filter(a => a.isCorrect).length;
+  const correctCount = state.userAnswers.filter(a => a && a.isCorrect).length;
   return Math.round((correctCount / state.questions.length) * 100);
 }
 
@@ -504,23 +651,34 @@ function calculateGrade(score) {
 }
 
 function getCategoryAnalysis() {
-  const analysis = { nervous: 0, homeostasis: 0, genetics: 0 };
-  const counts = { nervous: 0, homeostasis: 0, genetics: 0 };
+  const analysis = {
+    mid1_1: 0, mid1_2: 0, mid1_3: 0,
+    sub2_1_1: 0, sub2_1_2: 0, sub2_1_3: 0, sub2_2_1: 0, sub2_2_2: 0,
+    sub3_1_1: 0, sub3_1_2: 0, sub3_2_1: 0, sub3_2_2: 0, sub3_2_3: 0
+  };
+  const counts = {
+    mid1_1: 0, mid1_2: 0, mid1_3: 0,
+    sub2_1_1: 0, sub2_1_2: 0, sub2_1_3: 0, sub2_2_1: 0, sub2_2_2: 0,
+    sub3_1_1: 0, sub3_1_2: 0, sub3_2_1: 0, sub3_2_2: 0, sub3_2_3: 0
+  };
 
   state.userAnswers.forEach((ans, idx) => {
     const q = state.questions[idx];
-    counts[q.category]++;
-    if (ans.isCorrect) {
-      analysis[q.category]++;
+    if (counts[q.category] !== undefined) {
+      counts[q.category]++;
+      if (ans.isCorrect) {
+        analysis[q.category]++;
+      }
     }
   });
 
   // Calculate percentages
+  const percentages = {};
   Object.keys(analysis).forEach(key => {
-    analysis[key] = counts[key] > 0 ? Math.round((analysis[key] / counts[key]) * 100) : 100;
+    percentages[key] = counts[key] > 0 ? Math.round((analysis[key] / counts[key]) * 100) : 0;
   });
 
-  return analysis;
+  return { analysis: percentages, counts };
 }
 
 function getAdvice(grade) {
@@ -564,11 +722,19 @@ function updateGlobalStats() {
    ========================================== */
 
 const CHALLENGE_SECTIONS = [
-  { title: "단원 1: 신경계와 근육 조절", start: 1, end: 7, desc: "신경계 구성, 뇌의 구조와 기능, 척수 반사, 자율신경, 골격근 구조 및 활주설 계산" },
-  { title: "단원 2: 호르몬과 항상성 조절", start: 8, end: 14, desc: "호르몬 특징, 피드백 및 길항작용, 체온/혈당/삼투압 조절 메커니즘" },
-  { title: "단원 3: 질병과 인체 방어 작용", start: 15, end: 20, desc: "감염성/비감염성 질환, 1차 및 2차 방어작용, 백신 원리, ABO/Rh식 혈액형 응집" },
-  { title: "단원 4: 세포 주기와 세포 분열", start: 21, end: 25, desc: "염색체 구조, 세포 주기(G1, S, G2, M), 체세포 분열 및 감수 분열 분석" },
-  { title: "단원 5: 사람의 유전과 유전병", start: 26, end: 30, desc: "가계도 조사, 단일인자/복대립/다인자 유전, 반성 유전(색맹), 염색체 비분리 및 돌연변이" }
+  { title: "Ⅰ-❶ 생명과학의 이해", start: 1, end: 2, desc: "생물의 특성, 바이러스, 생명과학의 특성과 구성 단계" },
+  { title: "Ⅰ-❷ 생명활동과 에너지", start: 3, end: 5, desc: "물질대사와 ATP, 소화·순환·호흡·배설계 통합 작용, 대사성 질환" },
+  { title: "Ⅰ-❸ 생태계와 상호작용", start: 6, end: 10, desc: "생태계 구조와 환경, 개체군 밀도와 생존 곡선, 군집의 천이와 상호작용, 에너지 흐름" },
+  { title: "Ⅱ-❶-01. 신경자극전도와 시냅스전달", start: 11, end: 12, desc: "신경 세포막의 분극·탈분극·재분극 막전위 변화와 시냅스 흥분 전달" },
+  { title: "Ⅱ-❶-02. 신경계의 구조와 기능", start: 13, end: 14, desc: "중추 신경계(뇌/척수)의 기능 조율 및 말초 신경계(체성/자율 신경)" },
+  { title: "Ⅱ-❶-03. 항상성 유지", start: 15, end: 16, desc: "호르몬 분비 조절 피드백 루프와 체온·혈당량·삼투압 항상성 조절" },
+  { title: "Ⅱ-❷-01. 병원체와 방어작용", start: 17, end: 18, desc: "세균·바이러스·프라이온 감염성 질병과 인체 1·2차 방어작용" },
+  { title: "Ⅱ-❷-02. 항원항체반응과 백신", start: 19, end: 20, desc: "백신의 예방 기전과 기억 세포 형성 및 ABO/Rh식 혈액형 판정" },
+  { title: "Ⅲ-❶-01. 염색체와 유전자", start: 21, end: 22, desc: "염색체 및 뉴클레오솜 구조, 대립유전자, 가계도 및 다인자 사람의 유전" },
+  { title: "Ⅲ-❶-02. 생식세포 형성과 유전 다양성", start: 23, end: 25, desc: "세포 주기, 체세포/감수 분열과 유전 다양성 원리, 비분리 돌연변이" },
+  { title: "Ⅲ-❷-01. 생물의 진화", start: 26, end: 27, desc: "다윈의 자연선택설에 의한 생물의 적응과 진화 원리 및 증거" },
+  { title: "Ⅲ-❷-02. 생물의 분류체계", start: 28, end: 28, desc: "생물 분류 계급(계문강목과속종) 및 현대 3역 6계 분류" },
+  { title: "Ⅲ-❷-03. 식물과 동물의 분류", start: 29, end: 30, desc: "선태·양치·겉씨·속씨식물의 분류 및 다양한 무척추/척삭동물 분류" }
 ];
 
 function renderChallengeView() {
@@ -619,7 +785,7 @@ function renderChallengeView() {
                 <div class="progress-track" style="height: 4px; margin-bottom: 1rem;">
                   <div class="progress-fill" style="width: ${secProgressPercent}%; background: var(--neon-cyan);"></div>
                 </div>
-                <div class="challenge-grid" style="grid-template-columns: repeat(7, 1fr); gap: 10px;">
+                <div class="challenge-grid" style="grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;">
                   ${Array.from({ length: totalInSection }, (_, idx) => {
                     const dayNum = sec.start + idx;
                     const completed = state.completedDays[dayNum] !== undefined;
