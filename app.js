@@ -4,11 +4,7 @@ const state = {
   
   // Quiz State
   quizStatus: 'setup', // 'setup', 'active', 'result'
-  selectedCategories: [
-    'mid1_1', 'mid1_2', 'mid1_3', 
-    'sub2_1_1', 'sub2_1_2', 'sub2_1_3', 'sub2_2_1', 'sub2_2_2',
-    'sub3_1_1', 'sub3_1_2', 'sub3_2_1', 'sub3_2_2', 'sub3_2_3'
-  ],
+  selectedCategories: [],
   questions: [],
   currentQuestionIndex: 0,
   userAnswers: [], // Array of { questionId, chosenIndex, isCorrect }
@@ -264,12 +260,8 @@ function renderQuizView() {
       card.addEventListener('click', () => {
         const cat = card.getAttribute('data-category');
         if (state.selectedCategories.includes(cat)) {
-          if (state.selectedCategories.length > 1) {
-            state.selectedCategories = state.selectedCategories.filter(c => c !== cat);
-            card.classList.remove('checked');
-          } else {
-            alert("최소 하나의 학습 영역을 선택해야 합니다!");
-          }
+          state.selectedCategories = state.selectedCategories.filter(c => c !== cat);
+          card.classList.remove('checked');
         } else {
           state.selectedCategories.push(cat);
           card.classList.add('checked');
@@ -527,6 +519,11 @@ function renderQuizView() {
 
 // Start Quiz (randomly selects 20 questions from selected categories)
 function startQuiz() {
+  if (state.selectedCategories.length === 0) {
+    alert("최소 하나의 학습 영역을 선택해야 합니다!");
+    return;
+  }
+
   // Gather available questions
   let pool = [];
   state.selectedCategories.forEach(cat => {
@@ -789,17 +786,21 @@ function renderChallengeView() {
                   ${Array.from({ length: totalInSection }, (_, idx) => {
                     const dayNum = sec.start + idx;
                     const completed = state.completedDays[dayNum] !== undefined;
-                    const totalCompleted = Object.keys(state.completedDays).length;
-                    const isActive = dayNum === totalCompleted + 1 || (dayNum === 30 && totalCompleted === 30);
+                    
+                    // Day 1 to 13 are unlocked by default. Day 14+ are unlocked if the previous day is completed.
+                    const isOpen = (dayNum <= 13) || (state.completedDays[dayNum - 1] !== undefined);
                     
                     let cardClass = 'day-card';
                     let icon = 'lock';
                     if (completed) {
                       cardClass += ' completed';
                       icon = 'check-circle2';
-                    } else if (isActive) {
+                    } else if (isOpen) {
                       cardClass += ' active';
                       icon = 'play-circle';
+                    } else {
+                      cardClass += ' locked';
+                      icon = 'lock';
                     }
                     
                     return `
@@ -829,6 +830,14 @@ function renderChallengeView() {
     container.querySelectorAll('.day-card').forEach(card => {
       card.addEventListener('click', () => {
         const dayNum = parseInt(card.getAttribute('data-day'));
+        const completed = state.completedDays[dayNum] !== undefined;
+        
+        // Lock guard check
+        const isOpen = (dayNum <= 13) || (state.completedDays[dayNum - 1] !== undefined) || completed;
+        if (!isOpen) {
+          alert("이전 일차의 학습과 테스트를 먼저 완료해야 열립니다!");
+          return;
+        }
         
         // Find challenge day data
         const dayData = challengeData.find(d => d.day === dayNum);
