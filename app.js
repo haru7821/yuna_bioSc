@@ -145,7 +145,7 @@ function renderQuizView() {
             <div class="category-checkbox-card ${state.selectedCategories.includes('nervous') ? 'checked' : ''}" data-category="nervous">
               <span class="category-icon">🧠</span>
               <div class="category-name">신경계 & 근수축</div>
-              <div class="category-desc">자극 전도, 뇌, 자율신경, 근수축 원리</div>
+              <div class="category-desc">뇌와 척수, 자율신경, 근수축 구조 및 계산</div>
             </div>
             
             <div class="category-checkbox-card ${state.selectedCategories.includes('homeostasis') ? 'checked' : ''}" data-category="homeostasis">
@@ -563,6 +563,14 @@ function updateGlobalStats() {
    30-DAY CHALLENGE SYSTEM (30일 챌린지)
    ========================================== */
 
+const CHALLENGE_SECTIONS = [
+  { title: "단원 1: 신경계와 근육 조절", start: 1, end: 7, desc: "신경계 구성, 뇌의 구조와 기능, 척수 반사, 자율신경, 골격근 구조 및 활주설 계산" },
+  { title: "단원 2: 호르몬과 항상성 조절", start: 8, end: 14, desc: "호르몬 특징, 피드백 및 길항작용, 체온/혈당/삼투압 조절 메커니즘" },
+  { title: "단원 3: 질병과 인체 방어 작용", start: 15, end: 20, desc: "감염성/비감염성 질환, 1차 및 2차 방어작용, 백신 원리, ABO/Rh식 혈액형 응집" },
+  { title: "단원 4: 세포 주기와 세포 분열", start: 21, end: 25, desc: "염색체 구조, 세포 주기(G1, S, G2, M), 체세포 분열 및 감수 분열 분석" },
+  { title: "단원 5: 사람의 유전과 유전병", start: 26, end: 30, desc: "가계도 조사, 단일인자/복대립/다인자 유전, 반성 유전(색맹), 염색체 비분리 및 돌연변이" }
+];
+
 function renderChallengeView() {
   const container = document.getElementById('challenge-view');
   
@@ -588,27 +596,55 @@ function renderChallengeView() {
           </div>
         </div>
 
-        <div class="challenge-grid">
-          ${Array.from({ length: 30 }, (_, i) => {
-            const dayNum = i + 1;
-            const completed = state.completedDays[dayNum] !== undefined;
-            const isActive = dayNum === totalCompleted + 1 || (dayNum === 30 && totalCompleted === 30);
-            
-            let cardClass = 'day-card';
-            let icon = 'lock';
-            if (completed) {
-              cardClass += ' completed';
-              icon = 'check-circle2';
-            } else if (isActive) {
-              cardClass += ' active';
-              icon = 'play-circle';
+        <div class="challenge-sections">
+          ${CHALLENGE_SECTIONS.map(sec => {
+            let completedInSection = 0;
+            const totalInSection = sec.end - sec.start + 1;
+            for (let d = sec.start; d <= sec.end; d++) {
+              if (state.completedDays[d] !== undefined) completedInSection++;
             }
-            
+            const secProgressPercent = Math.round((completedInSection / totalInSection) * 100);
+
             return `
-              <div class="${cardClass}" data-day="${dayNum}">
-                <div class="day-number">${dayNum}</div>
-                <div class="day-status-icon">
-                  <i data-lucide="${icon}"></i>
+              <div class="glass-card section-card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                  <div>
+                    <h3 style="font-size: 1.15rem; color: var(--text-main); font-weight: 700;">${sec.title}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">${sec.desc}</p>
+                  </div>
+                  <span class="numbers" style="font-size: 0.85rem; color: var(--neon-cyan); font-weight: 700;">
+                    진행률: ${completedInSection} / ${totalInSection}일 (${secProgressPercent}%)
+                  </span>
+                </div>
+                <div class="progress-track" style="height: 4px; margin-bottom: 1rem;">
+                  <div class="progress-fill" style="width: ${secProgressPercent}%; background: var(--neon-cyan);"></div>
+                </div>
+                <div class="challenge-grid" style="grid-template-columns: repeat(7, 1fr); gap: 10px;">
+                  ${Array.from({ length: totalInSection }, (_, idx) => {
+                    const dayNum = sec.start + idx;
+                    const completed = state.completedDays[dayNum] !== undefined;
+                    const totalCompleted = Object.keys(state.completedDays).length;
+                    const isActive = dayNum === totalCompleted + 1 || (dayNum === 30 && totalCompleted === 30);
+                    
+                    let cardClass = 'day-card';
+                    let icon = 'lock';
+                    if (completed) {
+                      cardClass += ' completed';
+                      icon = 'check-circle2';
+                    } else if (isActive) {
+                      cardClass += ' active';
+                      icon = 'play-circle';
+                    }
+                    
+                    return `
+                      <div class="${cardClass}" data-day="${dayNum}" style="padding: 10px; border-radius: 12px; aspect-ratio: 1.2;">
+                        <div class="day-number" style="font-size: 1.4rem;">${dayNum}</div>
+                        <div class="day-status-icon" style="font-size: 0.95rem;">
+                          <i data-lucide="${icon}"></i>
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
                 </div>
               </div>
             `;
