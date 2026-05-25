@@ -154,7 +154,7 @@ function renderQuizView() {
       <div class="quiz-setup-container">
         <div class="dashboard-header">
           <h1 class="welcome-title">단원별 모의 퀴즈</h1>
-          <p class="welcome-desc">고2 생명과학 교과과정에서 무작위로 추출된 20문항을 통해 실력을 점검하세요.</p>
+          <p class="welcome-desc">원하는 학습 영역 카드를 클릭하면 즉시 해당 단원의 20문항 모의 퀴즈가 시작됩니다.</p>
         </div>
 
         <div class="glass-card">
@@ -242,10 +242,6 @@ function renderQuizView() {
               <div class="category-desc">선태·양치·겉씨·속씨식물의 분류 및 자포·편형·연체·환형·절지·척삭동물 분류</div>
             </div>
           </div>
-
-          <div style="display: flex; gap: 15px; margin-top: 2rem;">
-            <button id="start-quiz-btn" class="btn btn-primary btn-block">퀴즈 시작하기 (20문항)</button>
-          </div>
         </div>
 
         <div class="grid-3" style="margin-top: 2rem;">
@@ -274,21 +270,14 @@ function renderQuizView() {
       </div>
     `;
 
-    // Category click handler
+    // Category click handler: Instantly sets single selection and starts quiz
     container.querySelectorAll('.category-checkbox-card').forEach(card => {
       card.addEventListener('click', () => {
         const cat = card.getAttribute('data-category');
-        if (state.selectedCategories.includes(cat)) {
-          state.selectedCategories = state.selectedCategories.filter(c => c !== cat);
-          card.classList.remove('checked');
-        } else {
-          state.selectedCategories.push(cat);
-          card.classList.add('checked');
-        }
+        state.selectedCategories = [cat];
+        startQuiz();
       });
     });
-
-    document.getElementById('start-quiz-btn').addEventListener('click', startQuiz);
     
   } else if (state.quizStatus === 'active') {
     // Generate Active Quiz Screen
