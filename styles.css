@@ -907,6 +907,61 @@ h1, h2, h3, h4, h5, h6 {
   color: #fecdd3;
 }
 
+/* Bottom Navigation (Mobile Only) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 68px;
+  background: rgba(10, 15, 30, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: none; /* Hidden on desktop */
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.bottom-nav-item {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 80px;
+  height: 100%;
+  transition: var(--transition-fast);
+  outline: none;
+}
+
+.bottom-nav-item i {
+  font-size: 1.35rem;
+  transition: var(--transition-fast);
+}
+
+.bottom-nav-item:hover {
+  color: var(--text-main);
+}
+
+.bottom-nav-item.active {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+}
+
+.bottom-nav-item.active i {
+  transform: translateY(-2px) scale(1.1);
+  filter: drop-shadow(0 0 6px var(--neon-cyan-glow));
+}
+
 /* Responsive Styles */
 @media (max-width: 1024px) {
   .sidebar {
@@ -937,19 +992,76 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 768px) {
+  .sidebar {
+    display: none !important; /* Hide sidebar completely */
+  }
+  
+  .main-content {
+    margin-left: 0 !important; /* Content fills screen width */
+    margin-bottom: 78px; /* Room for bottom navigation bar */
+    padding: 1.25rem 1rem 2rem 1rem;
+  }
+  
+  .bottom-nav {
+    display: flex; /* Show bottom navigation on mobile */
+  }
+
   .grid-2, .grid-3 {
     grid-template-columns: 1fr;
   }
+  
   .category-selection-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
+  
   .challenge-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+    gap: 8px;
   }
-  .main-content {
-    padding: 1.5rem 1rem;
+
+  .day-card {
+    padding: 8px;
+    border-radius: 12px;
   }
+
+  .day-number {
+    font-size: 1.2rem;
+  }
+
+  .day-status-icon {
+    font-size: 0.8rem;
+  }
+
   .welcome-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+  }
+  
+  .quiz-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .glass-card {
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+  }
+
+  .question-text {
+    font-size: 1.15rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .option-button {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    gap: 10px;
+  }
+
+  .option-index {
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
   }
 }

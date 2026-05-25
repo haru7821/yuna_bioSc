@@ -42,6 +42,11 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // Global Event Listeners
   document.getElementById('app-sidebar').addEventListener('click', handleSidebarClick);
+  
+  const bottomNav = document.getElementById('app-bottom-nav');
+  if (bottomNav) {
+    bottomNav.addEventListener('click', handleBottomNavClick);
+  }
 });
 
 // Load state from localStorage
@@ -95,12 +100,26 @@ function handleSidebarClick(e) {
   switchTab(tabId);
 }
 
+// Handle Bottom Navigation Clicking (Mobile)
+function handleBottomNavClick(e) {
+  const button = e.target.closest('.bottom-nav-item');
+  if (!button) return;
+  
+  const tabId = button.getAttribute('data-tab');
+  switchTab(tabId);
+}
+
 // Switch Tabs
 function switchTab(tabId) {
   state.activeTab = tabId;
   
   // Update sidebar buttons
   document.querySelectorAll('.menu-button').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+  });
+
+  // Update bottom nav buttons
+  document.querySelectorAll('.bottom-nav-item').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
   });
 
